@@ -6,7 +6,7 @@ const DirectoryScreen = (props) => {
     // destructure the 'item' property from the input parameter, and rename it to 'campsite'
     const renderDirectoryItem = ({item: campsite}) => {
         return (
-            <ListItem>
+            <ListItem onPress={() => props.onPress(campsite.id)}>
                 <Avatar source={campsite.image} rounded />
                 <ListItem.Content>
                     <ListItem.Title>{campsite.name}</ListItem.Title>
@@ -17,16 +17,6 @@ const DirectoryScreen = (props) => {
             </ListItem>
         );
     }
-
-    // return (
-    //     <View >
-    //         <Text>Hi bob!</Text>
-    //         <Text>Hi bob!</Text>
-    //         <Text>{props.campsites[0].name}</Text>
-    //         <Text>Hi bob!</Text>
-    //         <Text>Hi bob!</Text>
-    //     </View>
-    // )
 
     return <FlatList
         data={props.campsites}

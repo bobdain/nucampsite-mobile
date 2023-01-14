@@ -1,21 +1,28 @@
 import { useState } from 'react';
 import { CAMPSITES } from '../shared/campsites.js';
 import DirectoryScreen from './DirectoryScreen';
-import { StyleSheet, Text, View } from 'react-native';
+import { View } from 'react-native';
+import CampsiteInfoScreen from './CampsiteInfoScreen';
 
 const Main = () => {
     const [campsites, setCampsites] = useState(CAMPSITES);
+    const [selectedCampsiteId, setSelectedCampsiteId] = useState();
 
-    // return (
-    //     <View >
-    //         <Text>Hi Holly!</Text>
-    //         <Text>Hi Holly!</Text>
-    //         <Text>Hi Holly!</Text>
-    //     </View>
-    // )
+    return (
+        // Flex: 1 makes it fill the space vertically
+        <View style={{ flex: 1 }}>
+            <DirectoryScreen
+                campsites={campsites}
+                onPress={campsiteId => setSelectedCampsiteId(campsiteId)}
+            />
 
-    return <DirectoryScreen campsites={campsites} />;
-
+            <CampsiteInfoScreen
+                campsite={
+                    campsites.filter(campsite => campsite.id === selectedCampsiteId)[0]
+                }
+            />
+        </View>
+    );
 }
 
 export default Main;
