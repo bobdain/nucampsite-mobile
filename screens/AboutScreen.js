@@ -1,7 +1,7 @@
-import { ScrollView } from "react-native-gesture-handler";
 import { Avatar, Card, ListItem } from "react-native-elements";
 import { PARTNERS } from '../shared/partners';
-import { Text, View } from "react-native";
+import { Text, ScrollView } from "react-native";
+import { useState } from "react";
 
 const Mission = () => {
     return (
@@ -14,6 +14,7 @@ const Mission = () => {
 }
 
 const AboutScreen = () => {
+    const [partners, setPartners] = useState(PARTNERS);
 
     return (
         <ScrollView>
@@ -23,7 +24,7 @@ const AboutScreen = () => {
                 <Card.Title>Community Partners</Card.Title>
                 <Card.Divider />
 
-                {PARTNERS.map((partner) => <ListItem key={partner.id}>
+                {partners.map((partner) => <ListItem key={partner.id}>
                     <Avatar rounded source={partner.image} />
                     <ListItem.Content>
                         <ListItem.Title>{partner.name}</ListItem.Title>
