@@ -1,11 +1,11 @@
-import { Text, View } from 'react-native';
-import { Card } from 'react-native-elements';
+import { StyleSheet, Text, View } from 'react-native';
+import { Card, Icon } from 'react-native-elements';
 
 // destructure 'campsite' from props passed en
 const RenderCampsite = ({ campsite }) => {
     if (campsite) {
         return (
-            <Card containerStyle={{ padding: 0 }}>
+            <Card containerStyle={styles.commentsTitle}>
                 <Card.Image source={campsite.image}>
                     <View style={{ justifyContent: 'center', flex: 1 }}>
                         <Text
@@ -21,6 +21,15 @@ const RenderCampsite = ({ campsite }) => {
                 </Card.Image>
 
                 <Text style={{ margin: 20 }}>{campsite.description}</Text>
+
+                <Icon
+                    name='heart-o'
+                    type='font-awesome'
+                    color='#f50'
+                    raised
+                    reverse
+                />
+
             </Card>
         )
 
@@ -28,5 +37,13 @@ const RenderCampsite = ({ campsite }) => {
         return <View />;
     }
 }
+
+const styles = StyleSheet.create({
+    cardContainer: {
+        padding: 0,
+        margin: 0,
+        marginBottom: 20
+    }
+});
 
 export default RenderCampsite;
