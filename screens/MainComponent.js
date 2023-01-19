@@ -13,6 +13,14 @@ import {
 import HomeScreen from './HomeScreen';
 import { Icon } from 'react-native-elements';
 import logo from '../assets/images/logo.png';
+import { useDispatch } from 'react-redux';
+import { useEffect } from 'react';
+
+// These are the thunk action creators from our slice reducer files:
+import { fetchPartners } from '../features/partners/partnersSlice';
+import { fetchCampsites } from '../features/campsites/campsitesSlice';
+import { fetchPromotions } from '../features/promotions/promotionsSlice';
+import { fetchComments } from '../features/comments/commentsSlice';
 
 const Drawer = createDrawerNavigator();
 
@@ -147,6 +155,18 @@ const CustomDrawerContent = (props) => (
 )
 
 const Main = () => {
+    const dispatch = useDispatch();
+
+    // When the app loads, the main component is mounted and this useEffect hook is called.
+    // All of our data is fetched and loaded into the Redux store so that it's available for all 
+    // components to access and modify
+    useEffect(() => {
+        dispatch(fetchCampsites()); // Make the calls here because they return actions
+        dispatch(fetchPromotions());
+        dispatch(fetchPartners());
+        dispatch(fetchComments());
+    }, [dispatch]); // best practice to send this, even if it isn't used. (it's not, in this case)
+
     return (
         // Flex: 1 makes it fill the space vertically
         <View style={{
@@ -196,7 +216,7 @@ const Main = () => {
                     name='About'
                     component={AboutNavigator}
                     options={{
-                        title: 'about',
+                        title: 'About',
                         drawerIcon: ({ color }) => (
                             <Icon
                                 name='info-circle'

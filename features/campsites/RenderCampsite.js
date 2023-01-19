@@ -1,16 +1,15 @@
 import { StyleSheet, Text, View } from 'react-native';
 import { Card, Icon } from 'react-native-elements';
+import { baseUrl } from '../../shared/baseUrl';
 
 // destructure 'campsite' from props passed en
 const RenderCampsite = (props) => {
     const { campsite } = props;
 
-    console.log('PROPS:', props);
-
     if (campsite) {
         return (
             <Card containerStyle={styles.commentsTitle}>
-                <Card.Image source={campsite.image}>
+                <Card.Image source={{ uri: baseUrl + campsite.image }}>
                     <View style={{ justifyContent: 'center', flex: 1 }}>
                         <Text
                             style={{
