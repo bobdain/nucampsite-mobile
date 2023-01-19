@@ -5,6 +5,7 @@ import DirectoryScreen from './DirectoryScreen';
 import CampsiteInfoScreen from './CampsiteInfoScreen';
 import AboutScreen from './AboutScreen';
 import ContactScreen from './ContactScreen';
+import ReservationScreen from './ReservationScreen';
 import {
     createDrawerNavigator,
     DrawerContentScrollView,
@@ -103,6 +104,30 @@ const ContactNavigator = () => {
     )
 }
 
+const ReservationNavigator = () => {
+    const Stack = createStackNavigator();
+
+    return (
+        <Stack.Navigator screenOptions={screenOptions}>
+            <Stack.Screen
+                name='Reservation'
+                component={ReservationScreen}
+                options={({ navigation }) => ({
+                    title: 'Reservation Search',
+                    headerLeft: () => (
+                        <Icon
+                            name='tree'
+                            type='font-awesome'
+                            iconStyle={styles.stackIcon}
+                            onPress={() => navigation.toggleDrawer()}
+                        />
+                    )
+                })}
+            />
+        </Stack.Navigator>
+    )
+}
+
 const DirectoryNavigator = () => {
     const Stack = createStackNavigator();
     return (
@@ -140,7 +165,7 @@ const DirectoryNavigator = () => {
 const CustomDrawerContent = (props) => (
     <DrawerContentScrollView {...props}>
         <View style={styles.drawerHeader}>
-            
+
             <View style={{ flex: 1 }}>
                 <Image source={logo} style={styles.drawerImage} />
             </View>
@@ -150,7 +175,7 @@ const CustomDrawerContent = (props) => (
             </View>
         </View>
 
-        <DrawerItemList {...props} labelStyle={{fontWeight: 'bold'}} />
+        <DrawerItemList {...props} labelStyle={{ fontWeight: 'bold' }} />
     </DrawerContentScrollView>
 )
 
@@ -204,6 +229,22 @@ const Main = () => {
                         drawerIcon: ({ color }) => (
                             <Icon
                                 name='list'
+                                type='font-awesome'
+                                size={24}
+                                iconStyle={{ width: 24 }}
+                                color={color}
+                            />
+                        )
+                    }}
+                />
+                <Drawer.Screen
+                    name='ReserveCampsite'
+                    component={ReservationNavigator}
+                    options={{
+                        title: 'Reserve Campsite',
+                        drawerIcon: ({ color }) => (
+                            <Icon
+                                name='tree'
                                 type='font-awesome'
                                 size={24}
                                 iconStyle={{ width: 24 }}
