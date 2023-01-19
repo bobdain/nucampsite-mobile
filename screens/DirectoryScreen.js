@@ -2,9 +2,24 @@ import { FlatList, View, Text } from 'react-native';
 import { Tile } from 'react-native-elements';
 import { useSelector } from 'react-redux';
 import { baseUrl } from '../shared/baseUrl';
+import Loading from '../components/LoadingComponent';
 
 const DirectoryScreen = ({ navigation }) => {
     const campsites = useSelector((state) => state.campsites);
+
+    // Loading
+    if (campsites.isLoading) {
+        return <Loading />;
+    }
+
+    // Loading error
+    if (campsites.errMess) {
+        return (
+            <View>
+                <Text>{campsites.errMess}</Text>
+            </View>
+        );
+    }
 
     // destructure the 'item' property from the input parameter, and rename it to 'campsite'
     const renderDirectoryItem = ({ item: campsite }) => {
