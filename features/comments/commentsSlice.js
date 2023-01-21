@@ -15,10 +15,37 @@ export const fetchComments = createAsyncThunk(
     }
 );
 
+export const postComment = createAsyncThunk(
+    'comments/postComment',
+    async (payload, { dispatch, getState }) => {
+        setTimeout(() => {
+            const { comments } = getState();
+            payload.date = new Date().toISOString();
+            payload.id = comments.commentsArray.length;
+            dispatch(addComment(payload));
+        }, 2000);
+    }
+);
+
 const commentsSlice = createSlice({
     name: 'comments',
     initialState: { isLoading: true, errMess: null, commentsArray: [] },
-    reducers: {},
+    reducers: {
+        addComment: (state, action) => {
+            // If the campsite is already in the favorites array, remove it
+            if (state.commentsArray.includes(action.payload)) {
+                // Return a new array
+                return state.commentsArray.filter(
+                    (comment) => comment !== action.payload
+                );
+            } else {
+                // Else add it
+                // Modify the existing array.  Redux toolkit will detect this change and 
+                // create of a new array behind the scenes
+                state.commentsArray.push(action.payload);
+            }
+        }
+    },
     extraReducers: {
         [fetchComments.pending]: (state) => {
             state.isLoading = true;
@@ -37,4 +64,5 @@ const commentsSlice = createSlice({
     }
 });
 
+export const { addComment } = commentsSlice.actions;
 export const commentsReducer = commentsSlice.reducer;
