@@ -1,41 +1,36 @@
-import { Image, Text, Platform, View, StyleSheet } from 'react-native';
+import { Image, Platform, StyleSheet, Text, View } from 'react-native';
 import Constants from 'expo-constants';
-import { createStackNavigator } from '@react-navigation/stack';
-import DirectoryScreen from './DirectoryScreen';
 import CampsiteInfoScreen from './CampsiteInfoScreen';
-import AboutScreen from './AboutScreen';
-import ContactScreen from './ContactScreen';
-import ReservationScreen from './ReservationScreen';
+import DirectoryScreen from './DirectoryScreen';
+import { createStackNavigator } from '@react-navigation/stack';
 import {
     createDrawerNavigator,
     DrawerContentScrollView,
     DrawerItemList
 } from '@react-navigation/drawer';
 import HomeScreen from './HomeScreen';
+import AboutScreen from './AboutScreen';
+import ContactScreen from './ContactScreen';
+import ReservationScreen from './ReservationScreen';
 import { Icon } from 'react-native-elements';
 import logo from '../assets/images/logo.png';
 import { useDispatch } from 'react-redux';
 import { useEffect } from 'react';
-
-// These are the thunk action creators from our slice reducer files:
 import { fetchPartners } from '../features/partners/partnersSlice';
 import { fetchCampsites } from '../features/campsites/campsitesSlice';
 import { fetchPromotions } from '../features/promotions/promotionsSlice';
 import { fetchComments } from '../features/comments/commentsSlice';
+import FavoritesScreen from './FavoritesScreen';
 
 const Drawer = createDrawerNavigator();
 
-
 const screenOptions = {
     headerTintColor: '#fff',
-    headerStyle: {
-        backgroundColor: '#5637DD'
-    }
-}
+    headerStyle: { backgroundColor: '#5637DD' }
+};
 
 const HomeNavigator = () => {
     const Stack = createStackNavigator();
-
     return (
         <Stack.Navigator screenOptions={screenOptions}>
             <Stack.Screen
@@ -54,16 +49,15 @@ const HomeNavigator = () => {
                 })}
             />
         </Stack.Navigator>
-    )
-}
+    );
+};
 
 const AboutNavigator = () => {
     const Stack = createStackNavigator();
-
     return (
         <Stack.Navigator screenOptions={screenOptions}>
             <Stack.Screen
-                name='About' // options.title defaults to the value of name
+                name='About'
                 component={AboutScreen}
                 options={({ navigation }) => ({
                     headerLeft: () => (
@@ -77,12 +71,11 @@ const AboutNavigator = () => {
                 })}
             />
         </Stack.Navigator>
-    )
-}
+    );
+};
 
 const ContactNavigator = () => {
     const Stack = createStackNavigator();
-
     return (
         <Stack.Navigator screenOptions={screenOptions}>
             <Stack.Screen
@@ -101,12 +94,11 @@ const ContactNavigator = () => {
                 })}
             />
         </Stack.Navigator>
-    )
-}
+    );
+};
 
 const ReservationNavigator = () => {
     const Stack = createStackNavigator();
-
     return (
         <Stack.Navigator screenOptions={screenOptions}>
             <Stack.Screen
@@ -125,16 +117,39 @@ const ReservationNavigator = () => {
                 })}
             />
         </Stack.Navigator>
-    )
-}
+    );
+};
+
+const FavoritesNavigator = () => {
+    const Stack = createStackNavigator();
+    return (
+        <Stack.Navigator screenOptions={screenOptions}>
+            <Stack.Screen
+                name='Favorites'
+                component={FavoritesScreen}
+                options={({ navigation }) => ({
+                    title: 'Favorite Campsites',
+                    headerLeft: () => (
+                        <Icon
+                            name='heart'
+                            type='font-awesome'
+                            iconStyle={styles.stackIcon}
+                            onPress={() => navigation.toggleDrawer()}
+                        />
+                    )
+                })}
+            />
+        </Stack.Navigator>
+    );
+};
 
 const DirectoryNavigator = () => {
     const Stack = createStackNavigator();
     return (
         <Stack.Navigator
             initialRouteName='Directory'
-            screenOptions={screenOptions}>
-
+            screenOptions={screenOptions}
+        >
             <Stack.Screen
                 name='Directory'
                 component={DirectoryScreen}
@@ -150,61 +165,54 @@ const DirectoryNavigator = () => {
                     )
                 })}
             />
-
             <Stack.Screen
                 name='CampsiteInfo'
                 component={CampsiteInfoScreen}
                 options={({ route }) => ({
                     title: route.params.campsite.name
-                })} />
-
+                })}
+            />
         </Stack.Navigator>
     );
-}
+};
 
 const CustomDrawerContent = (props) => (
     <DrawerContentScrollView {...props}>
         <View style={styles.drawerHeader}>
-
             <View style={{ flex: 1 }}>
                 <Image source={logo} style={styles.drawerImage} />
             </View>
-
             <View style={{ flex: 2 }}>
-                <Text style={styles.drawerHeaderText}>Nucamp</Text>
+                <Text style={styles.drawerHeaderText}>NuCamp</Text>
             </View>
         </View>
-
         <DrawerItemList {...props} labelStyle={{ fontWeight: 'bold' }} />
     </DrawerContentScrollView>
-)
+);
 
 const Main = () => {
     const dispatch = useDispatch();
 
-    // When the app loads, the main component is mounted and this useEffect hook is called.
-    // All of our data is fetched and loaded into the Redux store so that it's available for all 
-    // components to access and modify
     useEffect(() => {
-        dispatch(fetchCampsites()); // Make the calls here because they return actions
+        dispatch(fetchCampsites());
         dispatch(fetchPromotions());
         dispatch(fetchPartners());
         dispatch(fetchComments());
-    }, [dispatch]); // best practice to send this, even if it isn't used. (it's not, in this case)
+    }, [dispatch]);
 
     return (
-        // Flex: 1 makes it fill the space vertically
-        <View style={{
-            flex: 1,
-            paddingTop:
-                Platform.OS === 'ios' ? 0 : Constants.statusBarHeight
-        }}>
-
+        <View
+            style={{
+                flex: 1,
+                paddingTop:
+                    Platform.OS === 'ios' ? 0 : Constants.statusBarHeight
+            }}
+        >
             <Drawer.Navigator
                 initialRouteName='Home'
                 drawerContent={CustomDrawerContent}
-                drawerStyle={{ backgroundColor: '#cec8ff' }}>
-
+                drawerStyle={{ backgroundColor: '#CEC8FF' }}
+            >
                 <Drawer.Screen
                     name='Home'
                     component={HomeNavigator}
@@ -254,6 +262,22 @@ const Main = () => {
                     }}
                 />
                 <Drawer.Screen
+                    name='Favorites'
+                    component={FavoritesNavigator}
+                    options={{
+                        title: 'My Favorites',
+                        drawerIcon: ({ color }) => (
+                            <Icon
+                                name='heart'
+                                type='font-awesome'
+                                size={24}
+                                iconStyle={{ width: 24 }}
+                                color={color}
+                            />
+                        )
+                    }}
+                />
+                <Drawer.Screen
                     name='About'
                     component={AboutNavigator}
                     options={{
@@ -285,19 +309,12 @@ const Main = () => {
                         )
                     }}
                 />
-
             </Drawer.Navigator>
-
         </View>
     );
-}
+};
 
 const styles = StyleSheet.create({
-    stackIcon: {
-        marginLeft: 10,
-        color: '#fff',
-        fontSize: 24
-    },
     drawerHeader: {
         backgroundColor: '#5637DD',
         height: 140,
@@ -315,6 +332,11 @@ const styles = StyleSheet.create({
         margin: 10,
         height: 60,
         width: 60
+    },
+    stackIcon: {
+        marginLeft: 10,
+        color: '#fff',
+        fontSize: 24
     }
 });
 
