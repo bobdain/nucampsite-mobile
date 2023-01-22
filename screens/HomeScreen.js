@@ -1,4 +1,5 @@
-import { ScrollView, Text, View } from 'react-native';
+import { useEffect, useRef } from 'react';
+import { Text, View, Animated } from 'react-native';
 import { Card } from 'react-native-elements';
 import { useSelector } from 'react-redux';
 import { baseUrl } from '../shared/baseUrl';
@@ -7,12 +8,9 @@ import Loading from '../components/LoadingComponent';
 const FeaturedItem = (props) => {
     const { item } = props;
 
-    // Loading
     if (props.isLoading) {
         return <Loading />;
     }
-
-    // Load error
     if (props.errMess) {
         return (
             <View>
@@ -20,7 +18,6 @@ const FeaturedItem = (props) => {
             </View>
         );
     }
-
     if (item) {
         return (
             <Card containerStyle={{ padding: 0 }}>
@@ -31,10 +28,9 @@ const FeaturedItem = (props) => {
                                 color: 'white',
                                 textAlign: 'center',
                                 fontSize: 20
-                            }}>
-
+                            }}
+                        >
                             {item.name}
-
                         </Text>
                     </View>
                 </Card.Image>
@@ -42,22 +38,32 @@ const FeaturedItem = (props) => {
             </Card>
         );
     }
-
     return <View />;
-}
+};
 
 const HomeScreen = () => {
-    // Retrieve data objects from Redux store
     const campsites = useSelector((state) => state.campsites);
     const promotions = useSelector((state) => state.promotions);
     const partners = useSelector((state) => state.partners);
+    const scaleValue = useRef(new Animated.Value(0)).current;
+    const scaleAnimation = Animated.timing(scaleValue, {
+        toValue: 1,
+        duration: 1500,
+        useNativeDriver: true
+    });
 
     const featCampsite = campsites.campsitesArray.find((item) => item.featured);
-    const featPromotion = promotions.promotionsArray.find((item) => item.featured);
+    const featPromotion = promotions.promotionsArray.find(
+        (item) => item.featured
+    );
     const featPartner = partners.partnersArray.find((item) => item.featured);
 
+    useEffect(() => {
+        scaleAnimation.start();
+    }, []);
+
     return (
-        <ScrollView>
+        <Animated.ScrollView style={{ transform: [{ scale: scaleValue }] }}>
             <FeaturedItem
                 item={featCampsite}
                 isLoading={campsites.isLoading}
@@ -73,8 +79,8 @@ const HomeScreen = () => {
                 isLoading={partners.isLoading}
                 errMess={partners.errMess}
             />
-        </ScrollView>
-    )
-}
+        </Animated.ScrollView>
+    );
+};
 
 export default HomeScreen;
