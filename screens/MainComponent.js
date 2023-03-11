@@ -167,7 +167,7 @@ const LoginNavigator = () => {
                         <Icon
                             name={
                                 getFocusedRouteNameFromRoute(route) ===
-                                'Register'
+                                    'Register'
                                     ? 'user-plus'
                                     : 'sign-in'
                             }
@@ -232,6 +232,21 @@ const CustomDrawerContent = (props) => (
 const Main = () => {
     const dispatch = useDispatch();
 
+    const showNetInfo = async () => {
+        const connectionInfo = await NetInfo.fetch();
+
+        Platform.OS === 'ios'
+            ? Alert.alert(
+                'Initial Network Connectivity Type:',
+                connectionInfo.type
+            )
+            : ToastAndroid.show(
+                'Initial Network Connectivity Type: ' +
+                connectionInfo.type,
+                ToastAndroid.LONG
+            );
+    }
+
     useEffect(() => {
         dispatch(fetchCampsites());
         dispatch(fetchPromotions());
@@ -240,18 +255,7 @@ const Main = () => {
     }, [dispatch]);
 
     useEffect(() => {
-        NetInfo.fetch().then((connectionInfo) => {
-            Platform.OS === 'ios'
-                ? Alert.alert(
-                      'Initial Network Connectivity Type:',
-                      connectionInfo.type
-                  )
-                : ToastAndroid.show(
-                      'Initial Network Connectivity Type: ' +
-                          connectionInfo.type,
-                      ToastAndroid.LONG
-                  );
-        });
+        showNetInfo();
 
         const unsubscribeNetInfo = NetInfo.addEventListener(
             (connectionInfo) => {
