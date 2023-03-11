@@ -3,6 +3,7 @@ import { View, StyleSheet, ScrollView } from 'react-native';
 import { CheckBox, Input, Button, Icon } from 'react-native-elements';
 import * as SecureStore from 'expo-secure-store';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import ImageManipulator, { SaveFormat } from 'expo-image-manipulator';
 
 const LoginTab = ({ navigation }) => {
     const [username, setUsername] = useState('');
@@ -132,6 +133,35 @@ const RegisterTab = () => {
             );
         }
     };
+
+    const getImageFromCamera = async () => {
+        const cameraPermission =
+            await ImagePicker.requestCameraPermissionsAsync();
+
+        if (cameraPermission.status === 'granted') {
+            const capturedImage = await ImagePicker.launchCameraAsync({
+                allowsEditing: true,
+                aspect: [1, 1]
+            });
+            if (capturedImage.assets) {
+                console.log(capturedImage.assets[0]);
+                //setImageUrl(capturedImage.assets[0].uri);
+                processImage(capturedImage.uri);
+            }
+        }
+    };
+
+    const processImage = async imgUri => {
+        const processedImage = await ImageManipulator.manipulateAsync(
+            imgUri,
+            [{resize: {width: 400}}],
+            {format: SaveFormat.PNG}
+        );
+
+        console.log(processedImage);
+
+        setImageUrl(processedImage.uri);
+    }
 
     return (
         <ScrollView>
